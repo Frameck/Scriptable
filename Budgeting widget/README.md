@@ -21,3 +21,4 @@ Credit for this file goes to "https://www.youtube.com/channel/UCeygFwM-zH0XEfMbj
 
 
 
+![Light Mode](/Light mode.png)
