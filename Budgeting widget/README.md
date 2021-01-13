@@ -12,8 +12,7 @@ The code has the name of the variables mainly in italian, but it's not that hard
 
 **SETTING THE SCRIPT**
 
-Setting up the script is easy, you just need to replace the **SHEET ID** with your own
-On the homescreen of your iPhone you have to add a **Large** Scriptable widget and select the **Budgeting** script
+Setting up the script is easy, you just need to replace the **SHEET ID** with your own; on the homescreen of your iPhone you have to add a **Large** Scriptable widget and select the **Budgeting** script
  
  **GOOGLE SHEETS TEMPLATE**
 
