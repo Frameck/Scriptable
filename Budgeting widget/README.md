@@ -21,4 +21,8 @@ Credit for this file goes to "https://www.youtube.com/channel/UCeygFwM-zH0XEfMbj
 
 
 
-![Light Mode](/Light mode.png)
+![Light Mode](Budgeting widget/Light mode.png)
+
+
+
+![Dark Mode](Budgeting widget/Dark mode.png)
