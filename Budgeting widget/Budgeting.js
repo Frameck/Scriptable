@@ -1,7 +1,8 @@
 // Variables and Functions used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // Code by Frameck (https://github.com/Frameck)
-// Version 1.1
+// Budgeting widget, version 1.1
+
 String.prototype.insert = function(index, string) {
     if (index > 0)
     {
