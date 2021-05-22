@@ -25,7 +25,7 @@
     <i>https://drive.google.com/drive/folders/1RItAQHRAxMEPS14VeN2frJ1XuyCJ7bLh?usp=sharing</i>
 </p>
 
-<p>Credit for this file goes to <a href="https://www.youtube.com/channel/UCeygFwM-zH0XEfMbjmHClxA" target="_blank">this</a> girl on youtube</p>
+<p>Credit for this file goes to <a href="https://www.youtube.com/channel/UCeygFwM-zH0XEfMbjmHClxA" target="_blank" rel="noopener noreferrer">this</a> girl on youtube</p>
  
 
 <h2>SET UP GOOGLE SHEETS</h2>
