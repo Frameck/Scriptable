@@ -1,7 +1,7 @@
-// Variables and Functions used by Scriptable.
+// Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// Code by Frameck (https://github.com/Frameck)
-// Budgeting widget, version 1.1
+// Code by Frameck (https://github.com/Frameck/Scriptable)
+// Budgeting widget large, version 1.3
 
 String.prototype.insert = function(index, string) {
     if (index > 0)
@@ -53,19 +53,19 @@ function populateDictionary(categoryList, key, dataArray, dictionary) {
 
 const modificatori = { currency: '€', thousands: 'K', million: 'M' }
 const colori = { 
-    green: new Color("#2a9d8f"), 
-    red: new Color("#e63948"), 
-    blue: new Color("#467b9d"), 
-    header: Color.dynamic(new Color("#343946"), Color.white()), 
-    testi: Color.dynamic(new Color("#6e7276"), new Color("#ebebeb")), 
-    refresh: Color.dynamic(new Color("#1d1d1b"), Color.white()),
-    bg: Color.dynamic(new Color("#fafafa"), new Color("#191919"))
+    green: new Color('#2a9d8f'), 
+    red: new Color('#e63948'), 
+    blue: new Color('#467b9d'), 
+    header: Color.dynamic(new Color('#343946'), Color.white()), 
+    testi: Color.dynamic(new Color('#6e7276'), new Color('#ebebeb')), 
+    refresh: Color.dynamic(new Color('#1d1d1b'), Color.white()),
+    bg: Color.dynamic(new Color('#fafafa'), new Color('#191919'))
 }
 const font = {
-    header: new Font("Helvetica Bold", 23),
-    testi: new Font("Helvetica Bold", 13.5),
-    cifre: new Font("Helvetica Bold", 22),
-    refresh: new Font("Helvetica Light", 7)
+    header: new Font('Helvetica Bold', 23),
+    testi: new Font('Helvetica Bold', 13.5),
+    cifre: new Font('Helvetica Bold', 22),
+    refresh: new Font('Helvetica Light', 7)
 }
 const categorie = {
     dictionaryKeys : ['entrate', 'uscite', 'totali'],
@@ -73,6 +73,7 @@ const categorie = {
     uscite : ['bollette', 'abbonamenti', 'intrattenimento', 'cibo', 'spesa', 'salute', 'shopping', 'auto', 'viaggi', 'lavoro', 'regali', 'altro'],
     totali : ['entrate', 'uscite', 'utile']
 }
+const sheet_id = 'YOUR_SHEET_ID'
 
 // Widget
 let widget = await createWidget();
@@ -84,7 +85,7 @@ async function createWidget() {
 	w.respectScreenScale = true
 
 	class stackClass {
-    	constructor(stackName, stackSizeX, stackSizeY, spacing, paddingTop, paddingLeading, paddingBottom, paddingTrailing) {
+    	constructor(stackName, stackSizeX, stackSizeY, spacing, paddingTop, paddingLeading, paddingBottom, paddingTrailing, ) {
         	stackName.size = new Size(stackSizeX, stackSizeY)
         	stackName.spacing = spacing
         	stackName.setPadding(paddingTop, paddingLeading, paddingBottom, paddingTrailing)
@@ -104,13 +105,12 @@ async function createWidget() {
 	var refreshDate = Date.now() + 1000*60*300 // 5 hours
 	w.refreshAfterDate = new Date(refreshDate)
 
-		// Replace the Sheet ID	
-		const endpoint = "https://spreadsheets.google.com/feeds/cells/SHEET_ID/1/public/full?alt=json"
+		// Url
+		const endpoint = `https://spreadsheets.google.com/feeds/cells/${sheet_id}/1/public/full?alt=json`
 
 		// Function that performs the request to the JSON endpoint
 		async function loadItems() {
- 		let at = endpoint
- 		let req = new Request(at)
+ 		let req = new Request(endpoint)
  		let corpo = await req.loadJSON()
  		// We return just the cells
  		return corpo.feed.entry
@@ -118,11 +118,16 @@ async function createWidget() {
 		// Request the spreadsheet data
 		let json = await loadItems()
 
+		// Function that retrieves the data from json based on index number
+		function JSON_Key(number) {
+			return json[number].gs$cell['numericValue']
+		}
+
         // Initial arrays with the data from Google Sheets
         let googleSheetsData = {
-            entrate : [json[9].gs$cell["numericValue"],json[17].gs$cell["numericValue"],json[25].gs$cell["numericValue"]],
-            uscite : [json[7].gs$cell["numericValue"],json[15].gs$cell["numericValue"],json[23].gs$cell["numericValue"],json[31].gs$cell["numericValue"],json[38].gs$cell["numericValue"],json[44].gs$cell["numericValue"],json[50].gs$cell["numericValue"],json[56].gs$cell["numericValue"],json[62].gs$cell["numericValue"],json[68].gs$cell["numericValue"],json[74].gs$cell["numericValue"],json[80].gs$cell["numericValue"]],
-            totali : [json[86].gs$cell["numericValue"],json[87].gs$cell["numericValue"],json[88].gs$cell["numericValue"]]
+            entrate : [JSON_Key(9), JSON_Key(17), JSON_Key(25)],
+            uscite : [JSON_Key(7), JSON_Key(15), JSON_Key(23), JSON_Key(31), JSON_Key(38), JSON_Key(44), JSON_Key(50), JSON_Key(56), JSON_Key(62), JSON_Key(68), JSON_Key(74), JSON_Key(80)],
+            totali : [JSON_Key(86), JSON_Key(87), JSON_Key(88)]
         }
 
         // New arrays with the data processed with the functions defined above
@@ -139,9 +144,8 @@ async function createWidget() {
         populateDictionary(categorie.totali, categorie.dictionaryKeys[2], processedData.totali, dati)
         
         // Header
-		const headerStack = w.addStack()
-		new stackClass(headerStack, 0, 0, 0, 10, 6, 0, 0)
-		new stackText(headerStack, "BUDGETING", font.header, colori.header, null, 0) // if you want on this line you can change 'null' with the url of your spreadsheet so when you tap the header text it will open the file
+		const headerStack = w.addStack(); ; headerStack.setPadding(10, 6, 0, 0)
+		new stackText(headerStack, 'BUDGETING', font.header, colori.header, `https://docs.google.com/spreadsheets/d/${sheet_id}`, 0)
 
 		w.addSpacer(15)
 
@@ -166,7 +170,7 @@ async function createWidget() {
 		// Entrate Stack (entStack)(stack composta da due stack)
 		const entStack = w.addStack(); entStack.layoutHorizontally(); new stackClass(entStack, 0, 0, 10, 0, 6, 0, 0)
 		// Green Rectangle
-		let spacer = entStack.addStack(); spacer.backgroundColor = colori.green; spacer.addText(" "); spacer.size = new Size (0,51)
+		let spacer = entStack.addStack(); spacer.backgroundColor = colori.green; spacer.addText(' '); spacer.size = new Size (0,51)
 
 		w.addSpacer(15)
 
@@ -191,7 +195,7 @@ async function createWidget() {
 		// Uscite Stack (uscStack)(stack composta da quattro stack)
 		const uscStack = w.addStack(); uscStack.layoutHorizontally(); new stackClass(uscStack, 0, 0, 10, 0, 6, 0, 5)
 		// Red Rectangle
-		let spacer2 = uscStack.addStack(); spacer2.backgroundColor = colori.red; spacer2.addText(" "); spacer2.size = new Size (0,104)
+		let spacer2 = uscStack.addStack(); spacer2.backgroundColor = colori.red; spacer2.addText(' '); spacer2.size = new Size (0,104)
 
 		w.addSpacer(0)
 
@@ -235,9 +239,9 @@ async function createWidget() {
 		
 	// Widget last update
 	const l1 = w.addStack(); l1.layoutHorizontally(); l1.centerAlignContent(); l1.setPadding(0, 0, -8, 0)
-	var today = new Date()
-	var date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear()
-	let refreshLabel = w.addText("Aggiornato al: " + date+","+new Date().toLocaleTimeString())
+	let today = new Date()
+	let date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear()
+	let refreshLabel = w.addText('Aggiornato al: ' + date+','+new Date().toLocaleTimeString())
 	refreshLabel.font = font.refresh; refreshLabel.textColor = colori.refresh; refreshLabel.textOpacity = 0.9; refreshLabel.centerAlignText()
 	
 	return w
