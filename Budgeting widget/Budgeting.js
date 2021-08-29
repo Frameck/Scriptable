@@ -47,7 +47,7 @@ function formattazioneNumGrandi(value) {
 function populateDictionary(categoryList, key, dataArray, dictionary) {
     dictionary[key] = {}
     for (i=0; i<categoryList.length; i++) {
-        dictionary[key][categoryList[i]] = {name: categoryList[i].charAt(0).toUpperCase() + categoryList[i].toString().slice(1), value: dataArray[i]}
+        dictionary[key][categoryList[i]] = { name: categoryList[i].charAt(0).toUpperCase() + categoryList[i].toString().slice(1), value: dataArray[i] }
     }
 }
 
@@ -68,7 +68,7 @@ const font = {
     refresh: new Font('Helvetica Light', 7)
 }
 const categorie = {
-    dictionaryKeys : ['entrate', 'uscite', 'totali'],
+    keys : ['entrate', 'uscite', 'totali'],
     entrate : ['sostentamento', 'investimenti', 'case'],
     uscite : ['bollette', 'abbonamenti', 'intrattenimento', 'cibo', 'spesa', 'salute', 'shopping', 'auto', 'viaggi', 'lavoro', 'regali', 'altro'],
     totali : ['entrate', 'uscite', 'utile']
@@ -110,10 +110,10 @@ async function createWidget() {
 
 		// Function that performs the request to the JSON endpoint
 		async function loadItems() {
- 		let req = new Request(endpoint)
- 		let corpo = await req.loadJSON()
- 		// We return just the cells
- 		return corpo.feed.entry
+			let req = new Request(endpoint)
+			let corpo = await req.loadJSON()
+			// We return just the cells
+			return corpo.feed.entry
 		}
 		// Request the spreadsheet data
 		let json = await loadItems()
@@ -137,11 +137,11 @@ async function createWidget() {
             totali : googleSheetsData.totali.map(formattazioneNumGrandi)
         }
 
-        // Create a dictionary with all the data
+        // Create an object that contains all the data
         const dati = {}
-        populateDictionary(categorie.entrate, categorie.dictionaryKeys[0], processedData.entrate, dati)
-        populateDictionary(categorie.uscite, categorie.dictionaryKeys[1], processedData.uscite, dati)
-        populateDictionary(categorie.totali, categorie.dictionaryKeys[2], processedData.totali, dati)
+        populateDictionary(categorie.entrate, categorie.keys[0], processedData.entrate, dati)
+        populateDictionary(categorie.uscite, categorie.keys[1], processedData.uscite, dati)
+        populateDictionary(categorie.totali, categorie.keys[2], processedData.totali, dati)
         
         // Header
 		const headerStack = w.addStack(); ; headerStack.setPadding(10, 6, 0, 0)
