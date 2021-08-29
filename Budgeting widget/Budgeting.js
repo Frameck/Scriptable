@@ -237,11 +237,12 @@ async function createWidget() {
 
 	w.addSpacer(7)
 		
-	// Widget last update
+	// Footer: widget last update
 	const l1 = w.addStack(); l1.layoutHorizontally(); l1.centerAlignContent(); l1.setPadding(0, 0, -8, 0)
-	let today = new Date()
-	let date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear()
-	let refreshLabel = w.addText('Aggiornato al: ' + date+','+new Date().toLocaleTimeString())
+	const today = new Date()
+	const date = `${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}`
+	const refreshLabel = w.addText(`Aggiornato al: ${date},${today.toLocaleTimeString()}`)
+	// Apply style to the footer
 	refreshLabel.font = font.refresh; refreshLabel.textColor = colori.refresh; refreshLabel.textOpacity = 0.9; refreshLabel.centerAlignText()
 	
 	return w
